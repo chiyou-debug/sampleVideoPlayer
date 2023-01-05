@@ -38,7 +38,7 @@ mainWidget::mainWidget(QWidget *parent)
 
     // 进度条调节
     ui->progressSlider->installEventFilter(this);
-    connect(ui->progressSlider, &QSlider::sliderMoved, this, &mainWidget::updateTimeLable);
+    connect(ui->progressSlider, &QSlider::valueChanged, this, &mainWidget::updateTimeLable);
     connect(ui->progressSlider, &QSlider::sliderMoved, this, &mainWidget::changePosition);
     // connect(ui->progressSlider, &QSlider::valueChanged, this, &mainWidget::changePosition); 使用valueChanged会卡顿, 但是sliderMoved就不会, 不知道咋回事, 没有发现异常
 
@@ -124,6 +124,7 @@ void mainWidget::changePosition(int pos)
 
 void mainWidget::updateTimeLable()
 {
+    qDebug() << "updateTimeLable===============================";
     char buf[256];
 
     // 获取视频总时长并格式化
