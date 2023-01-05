@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QSlider>
 #include <vlc/vlc.h>
+#include <QStandardPaths>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class mainWidget; }
@@ -38,9 +39,9 @@ private slots:
 private:
     Ui::mainWidget *ui;
 
-    libvlc_instance_t *m_vlcInstance;
-    libvlc_media_player_t *m_vlcPlayer;
-    libvlc_media_t *m_vlcMedia;
+    libvlc_instance_t *m_vlcInstance;       // 代表一个libVLC的实例
+    libvlc_media_player_t *m_vlcPlayer;     // 代表一个VLC媒体播放器
+    libvlc_media_t *m_vlcMedia;             // 代表一个可以播放的媒体
     libvlc_event_manager_t * m_vlcEventManager;
 };
 #endif // MAINWIDGET_H

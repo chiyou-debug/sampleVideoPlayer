@@ -22,8 +22,8 @@ mainWidget::mainWidget(QWidget *parent)
     this->setWindowTitle("My VLC Player");
     this->setMinimumSize(QSize(1310, 760));
     ui->voiceSlider->setValue(50);
-    ui->progressSlider->hide();
     ui->progressSlider->setRange(0, 1000);
+    ui->progressSlider->hide();
 
     // 创建VLC实例
     m_vlcInstance = libvlc_new(0, NULL);
@@ -31,14 +31,16 @@ mainWidget::mainWidget(QWidget *parent)
     m_vlcPlayer = libvlc_media_player_new(m_vlcInstance);
     assert(m_vlcPlayer != NULL);
 
-    // voiceSlider
+    // 音量调节
     ui->voiceSlider->installEventFilter(this);
     connect(ui->voiceSlider, &QSlider::valueChanged, this, &mainWidget::changeVolume);
+    connect(ui->voiceSlider, &QSlider::sliderMoved, this, &mainWidget::changeVolume);
 
-    // progressSlider
+    // 进度条调节
     ui->progressSlider->installEventFilter(this);
-    connect(ui->progressSlider, &QSlider::valueChanged, this, &mainWidget::updateTimeLable);
-    connect(ui->progressSlider, &QSlider::valueChanged, this, &mainWidget::changePosition);
+    connect(ui->progressSlider, &QSlider::sliderMoved, this, &mainWidget::updateTimeLable);
+    connect(ui->progressSlider, &QSlider::sliderMoved, this, &mainWidget::changePosition);
+    // connect(ui->progressSlider, &QSlider::valueChanged, this, &mainWidget::changePosition); 使用valueChanged会卡顿, 但是sliderMoved就不会, 不知道咋回事, 没有发现异常
 
     // 监测VLC事件, 移动Slider
     m_vlcEventManager = libvlc_media_player_event_manager(m_vlcPlayer);
@@ -48,7 +50,7 @@ mainWidget::mainWidget(QWidget *parent)
 void mainWidget::on_importVideoBtn_clicked()
 {
     // 导入视频
-    QString fileName = QFileDialog::getOpenFileName(this, tr("请选择文件"), tr("C:/Users/Administrator/Downloads"), tr("视频文件(*.mp4 *.mp3 *.flv);;所有文件(*.*)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("请选择文件"), QString(QStandardPaths::DownloadLocation), tr("视频文件(*.mp4 *.mp3 *.flv);;所有文件(*.*)"));
     if (fileName == NULL) return;
     fileName = QDir::toNativeSeparators(fileName);
 
